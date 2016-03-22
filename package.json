@@ -1,0 +1,24 @@
+{
+  "name": "vhyper-orders",
+  "version": "1.0.0",
+  "description": "VHyper's internal site for keeping track of orders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sfbahr/VHyperOrders.git"
+  },
+  "keywords": [
+    "vhyper",
+    "orders",
+    "crud"
+  ],
+  "author": "Samuel Bahr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sfbahr/VHyperOrders/issues"
+  },
+  "homepage": "https://github.com/sfbahr/VHyperOrders#readme"
+}
