@@ -25,6 +25,7 @@
     "babel-preset-react": "^6.5.0",
     "body-parser": "^1.15.0",
     "bootstrap": "^3.3.6",
+    "express": "^4.13.4",
     "jquery": "^2.2.2",
     "pg": "^4.5.1",
     "react": "^0.14.7",
