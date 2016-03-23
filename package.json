@@ -2,7 +2,7 @@
   "name": "vhyper-orders",
   "version": "1.0.0",
   "description": "VHyper's internal site for keeping track of orders",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,5 +20,17 @@
   "bugs": {
     "url": "https://github.com/sfbahr/VHyperOrders/issues"
   },
-  "homepage": "https://github.com/sfbahr/VHyperOrders#readme"
+  "homepage": "https://github.com/sfbahr/VHyperOrders#readme",
+  "dependencies": {
+    "babel-preset-react": "^6.5.0",
+    "body-parser": "^1.15.0",
+    "bootstrap": "^3.3.6",
+    "jquery": "^2.2.2",
+    "pg": "^4.5.1",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7"
+  },
+  "devDependencies": {
+    "webpack": "^1.12.14"
+  }
 }
