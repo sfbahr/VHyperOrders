@@ -1,8 +1,9 @@
-var express = require("express");
-var util = require("util");
-var pg = require("pg");
+const express = require("express");
+const util = require("util");
+const pg = require("pg");
 
-var conString = "postgres://user:password@localhost/orders";
+const conString = "postgres://user:password@localhost/orders";
+const port = 80;
 
 pg.connect(conString, (err, client, done) => {
   if (err) {
@@ -18,7 +19,7 @@ pg.connect(conString, (err, client, done) => {
   });
 });
 
-var app = express();
+const app = express();
 
 app.use((req, res, next) => {
   util.log(`${req.method} request for '${req.url}'`);
@@ -27,8 +28,8 @@ app.use((req, res, next) => {
 
 app.use(express.static("./public"));
 
-app.listen(80);
+app.listen(port);
 
-console.log("Express app running on port 80");
+console.log(`Express app running on port ${port}`);
 
 module.exports = app;
