@@ -1,3 +1,9 @@
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const config = require('./webpack.config');
+const compiler = webpack(config);
+
 const express = require("express");
 const util = require("util");
 const bodyParser = require("body-parser");
@@ -36,6 +42,8 @@ pgQuery('select * FROM status', [], (err, result) => {
 
 const app = express();
 
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+app.use(webpackHotMiddleware(compiler));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -123,8 +131,10 @@ app.put("/orders", (req, res) => {
     // res.json(skierTerms);
 // });
 
-app.listen(port);
-
-console.log(`Express app running on port ${port}`);
-
-module.exports = app;
+app.listen(port, (error) => {
+    if (error) {
+        console.error(error);
+    } else {
+        console.info("==>  Listening on port %s. Open up http://localhost:%s/ in your browser.", port, port);
+    }
+});
