@@ -48,18 +48,25 @@ app.use(express.static("./public"));
 
 app.get(`/orders/${password}`, (req, res) => {
     const queryString = String.raw`SELECT o.id,
-            o.status_id,
-            o.tracking_link,
-            o.name,
-            o.number,
-            o.link,
-            o.category,
-            o.material,
-            o.supplier,
-            o.price,
-            o.quantity,
-            o.notes
-        FROM orders o
+        o.status_id,
+        o.tracking_link,
+        o.name,
+        o.number,
+        o.link,
+        o.category,
+        o.material,
+        o.supplier,
+        o.price,
+        o.quantity,
+        o.notes,
+        (
+            SELECT c.datetime AT TIME ZONE 'America/New_York'::varchar
+            FROM changes c
+            WHERE c.order_id = o.id
+            ORDER BY datetime DESC
+            LIMIT 1
+        ) changed
+    FROM orders o
     ;`;
     
     pgQuery(queryString, [], (err, result) => {
@@ -93,7 +100,7 @@ app.get(`/orders/:id/changes/${password}`, (req, res) => {
 });
 
 // Create
-app.post("/orders-api", (req, res) => {
+app.post("/orders", (req, res) => {
     if (req.body.password === password) {
         // skierTerms.push(req.body);
         // res.json(skierTerms);
@@ -101,7 +108,7 @@ app.post("/orders-api", (req, res) => {
 });
 
 // Update
-app.put("/orders-api", (req, res) => {
+app.put("/orders", (req, res) => {
     if (req.body.password === password) {
         // skierTerms.push(req.body);
         // res.json(skierTerms);
