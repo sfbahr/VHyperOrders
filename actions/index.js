@@ -1,64 +1,160 @@
-import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch';
 
-export const REQUEST_POSTS = 'REQUEST_POSTS'
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-export const SELECT_REDDIT = 'SELECT_REDDIT'
-export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
+export const REQUEST_ORDERS = 'REQUEST_ORDERS';
+export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
+export const INVALIDATE_ORDERS = 'INVALIDATE_ORDERS';
+export const TRY_PASSWORD = 'TRY_PASSWORD';
+export const CHECKED_PASSWORD = 'CHECKED_PASSWORD';
+export const HIDE_PASSWORD_SUCCESS = 'HIDE_PASSWORD_SUCCESS';
 
-export function selectReddit(reddit) {
+
+export function invalidateOrders() {
   return {
-    type: SELECT_REDDIT,
-    reddit
+    type: INVALIDATE_ORDERS
   }
 }
 
-export function invalidateReddit(reddit) {
+function tryPassword() {
   return {
-    type: INVALIDATE_REDDIT,
-    reddit
+    type: TRY_PASSWORD
   }
 }
 
-function requestPosts(reddit) {
+function checkedPassword(json) {
   return {
-    type: REQUEST_POSTS,
-    reddit
-  }
-}
-
-function receivePosts(reddit, json) {
-  return {
-    type: RECEIVE_POSTS,
-    reddit: reddit,
-    posts: json.data.children.map(child => child.data),
+    type: CHECKED_PASSWORD,
+    password: json.password,
+    isCorrect: json.isCorrect,
     receivedAt: Date.now()
   }
 }
 
-function fetchPosts(reddit) {
+function hidePasswordSuccess() {
+  return {
+    type: HIDE_PASSWORD_SUCCESS
+  }
+}
+
+function validatePassword(password) {
   return dispatch => {
-    dispatch(requestPosts(reddit))
-    return fetch(`https://www.reddit.com/r/${reddit}.json`)
+    dispatch(tryPassword());
+    console.log("validatePassword is about to fetch.")
+    return fetch(`/password/${password}`)
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(reddit, json)))
+      .then(json => {
+        dispatch(checkedPassword(json));
+        if (json.isCorrect) {
+          dispatch(fetchOrdersIfNeeded());
+          setTimeout(() => {
+            dispatch(hidePasswordSuccess());
+          }, 5000);
+        }
+      });
   }
 }
 
-function shouldFetchPosts(state, reddit) {
-  const posts = state.postsByReddit[reddit]
-  if (!posts) {
-    return true
+function shouldValidatePassword(state) {
+  if (state.enteredPassword.isChecking) {
+    return false;
   }
-  if (posts.isFetching) {
-    return false
-  }
-  return posts.didInvalidate
+  return !state.enteredPassword.isCorrect;
 }
 
-export function fetchPostsIfNeeded(reddit) {
+export function validatePasswordIfNeeded(password) {
   return (dispatch, getState) => {
-    if (shouldFetchPosts(getState(), reddit)) {
-      return dispatch(fetchPosts(reddit))
+    const state = getState();
+    if (shouldValidatePassword(state)) {
+      return dispatch(validatePassword(password));
     }
   }
 }
+
+///////////////////
+
+function requestOrders() {
+  return {
+    type: REQUEST_ORDERS
+  };
+}
+
+function receiveOrders(json) {
+  return {
+    type: RECEIVE_ORDERS,
+    orders: json,
+    receivedAt: Date.now()
+  };
+}
+
+function fetchOrders(password) {
+  return dispatch => {
+    dispatch(requestOrders())
+    return fetch(`/orders/${password}`)
+      .then(response => response.json())
+      .then(json => dispatch(receiveOrders(json)))
+  };
+}
+
+function shouldFetchOrders(state) {
+  if (!state.enteredPassword.isCorrect) {
+    return false;
+  }
+  if (state.orders.isFetching) {
+    return false;
+  }
+  if (state.orders.isEditing) {
+    return false;
+  }
+  return true;
+}
+
+export function fetchOrdersIfNeeded() {
+  return (dispatch, getState) => {
+    const state = getState();
+    if (shouldFetchOrders(state)) {
+      return dispatch(fetchOrders(state.enteredPassword.password));
+    }
+  };
+}
+
+// function requestOrders() {
+  // return {
+    // type: REQUEST_ORDERS
+  // }
+// }
+
+// function receiveOrders(json) {
+  // return {
+    // type: RECEIVE_ORDERS,
+    // orders: json,
+    // receivedAt: Date.now()
+  // }
+// }
+
+// function fetchOrders(password) {
+  // return dispatch => {
+    // dispatch(requestOrders())
+    // return fetch(`/orders/${password}`)
+      // .then(response => response.json())
+      // .then(json => dispatch(receiveOrders(json)))
+  // }
+// }
+
+// function shouldFetchPosts(state, reddit) {
+  // const posts = state.postsByReddit[reddit]
+  // if (!posts) {
+    // return true
+  // }
+  // if (posts.isFetching) {
+    // return false
+  // }
+  // return posts.didInvalidate
+// }
+
+// export function fetchPostsIfNeeded(reddit) {
+  // return (dispatch, getState) => {
+    // const state = getState()
+    // if (shouldFetchPosts(state, reddit)) {
+      // return dispatch(fetchOrders(state.password))
+    // }
+  // }
+// }

@@ -54,6 +54,20 @@ app.use((req, res, next) => {
 
 app.use(express.static("./public"));
 
+app.get("/password/:check", (req, res) => {
+    if (req.params.check === password) {
+        res.json({
+            password: req.params.check,
+            isCorrect: true
+        });
+    } else {
+        res.json({
+            password: req.params.check,
+            isCorrect: false
+        });
+    }
+});
+
 app.get(`/orders/${password}`, (req, res) => {
     const queryString = String.raw`SELECT o.id,
         o.status_id,
@@ -73,8 +87,9 @@ app.get(`/orders/${password}`, (req, res) => {
             WHERE c.order_id = o.id
             ORDER BY datetime DESC
             LIMIT 1
-        ) changed
+        ) updated
     FROM orders o
+    ORDER BY updated DESC
     ;`;
     
     pgQuery(queryString, [], (err, result) => {
