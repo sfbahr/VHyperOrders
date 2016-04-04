@@ -38,7 +38,6 @@ function hidePasswordSuccess() {
 function validatePassword(password) {
   return dispatch => {
     dispatch(tryPassword());
-    console.log("validatePassword is about to fetch.")
     return fetch(`/password/${password}`)
       .then(response => response.json())
       .then(json => {

@@ -14,8 +14,6 @@ function enteredPassword(state = {
   isChecking: false,
   showSuccess: false
 }, action) {
-  console.log("executing enteredPassword reducer");
-  console.log(`pass=${state.password}, corr=${state.isCorrect}, check=${state.isChecking}`);
   switch (action.type) {
     case TRY_PASSWORD:
       return Object.assign({}, state, {

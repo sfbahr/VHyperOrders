@@ -19,7 +19,6 @@ const statusIdToName = (id) => {
 
 export default class Orders extends Component {
   render() {
-    console.log(`Orders props: ${JSON.stringify(this.props)}`);
     const {orders} = this.props;
     
     return (
@@ -40,9 +39,14 @@ export default class Orders extends Component {
               <th>Status Updated</th>
             </tr>
             
-            {orders.map((order, i) =>
+            {orders.map((order) =>
               <tr key={order.id}>
-                <td>{statusIdToName(order.status_id)}</td>
+                <td>
+                  {order.tracking_link
+                    ? <a href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
+                    : statusIdToName(order.status_id)
+                  }
+                </td>
                 <td><a href={order.link}>{order.name}</a></td>
                 <td>{order.number}</td>
                 <td>{order.category}</td>

@@ -44,7 +44,6 @@ class App extends Component {
   // }
 
   render() {
-    console.log(`App Props: ${JSON.stringify(this.props)}`);
     const { psw, isCorrect, isChecking, showSuccess, onPswEntered } = this.props;
     const {orders, isFetching, fetchOrdersIfNeeded} = this.props;
     
