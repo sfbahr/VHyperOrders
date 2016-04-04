@@ -5,7 +5,10 @@ import {
   HIDE_PASSWORD_SUCCESS,
   INVALIDATE_ORDERS,
   REQUEST_ORDERS,
-  RECEIVE_ORDERS
+  RECEIVE_ORDERS,
+  SUBMIT_ORDER,
+  SUBMIT_SUCCESS,
+  SUBMIT_FAILURE
 } from '../actions'
 
 function enteredPassword(state = {
@@ -38,6 +41,7 @@ function enteredPassword(state = {
 function orders(state = {
   isFetching: false,
   isEditing: false,
+  isSubmitting: false,
   items: []
 }, action) {
   switch (action.type) {
@@ -50,6 +54,18 @@ function orders(state = {
         isFetching: false,
         items: action.orders,
         lastUpdated: action.receivedAt
+      });
+    case SUBMIT_ORDER:
+      return Object.assign({}, state, {
+        isSubmitting: true
+      });
+    case SUBMIT_SUCCESS:
+      return Object.assign({}, state, {
+        isSubmitting: false
+      });
+    case SUBMIT_FAILURE:
+      return Object.assign({}, state, {
+        isSubmitting: false
       });
     default: 
       return state;

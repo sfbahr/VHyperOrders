@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
-const statusIdToName = (id) => {
+export const statusIdToName = (id) => {
   switch (id) {
     case 0:
       return "Nonexistant";

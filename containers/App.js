@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchOrdersIfNeeded, validatePasswordIfNeeded, invalidateOrders } from '../actions'
+import {fetchOrdersIfNeeded,
+        createOrderIfPossible,
+        validatePasswordIfNeeded,
+        invalidateOrders } from '../actions'
 import EnterPassword from '../components/EnterPassword'
 import AddOrder from '../components/AddOrder'
 import Orders from '../components/Orders'
@@ -45,7 +48,7 @@ class App extends Component {
 
   render() {
     const { psw, isCorrect, isChecking, showSuccess, onPswEntered } = this.props;
-    const {orders, isFetching, fetchOrdersIfNeeded} = this.props;
+    const {orders, isFetching, isEditing, isSubmitting, fetchOrdersIfNeeded} = this.props;
     
     return (
       <div>
@@ -56,7 +59,8 @@ class App extends Component {
                        onEntered={onPswEntered} />
         {isCorrect &&
           <div>
-            <AddOrder />
+            <AddOrder isSubmitting={isSubmitting}
+                      createOrderIfPossible={createOrderIfPossible}/>
             <br />
             <Orders orders={orders}/>
           </div>
@@ -112,14 +116,16 @@ App.propTypes = {
 function mapStateToProps(state) {
   const {orders, enteredPassword} = state;
   const {password, isCorrect, isChecking, showSuccess} = enteredPassword;
-  const {items, isFetching} = orders;
+  const {items, isFetching, isEditing, isSubmitting} = orders;
   return  {
     psw: password,
     isCorrect,
     isChecking,
     showSuccess,
     orders: items,
-    isFetching
+    isFetching,
+    isEditing,
+    isSubmitting
   };
   
   // const { selectedReddit, postsByReddit } = state
@@ -147,6 +153,9 @@ function mapDispatchToProps(dispatch) {
     },
     fetchOrdersIfNeeded: () => {
       dispatch(fetchOrdersIfNeeded());
+    },
+    createOrderIfPossible: (order) => {
+      dispatch(createOrderIfPossible(order));
     }
   };
 }

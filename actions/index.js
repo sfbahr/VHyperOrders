@@ -3,6 +3,9 @@ import fetch from 'isomorphic-fetch';
 export const REQUEST_ORDERS = 'REQUEST_ORDERS';
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS';
 export const INVALIDATE_ORDERS = 'INVALIDATE_ORDERS';
+export const SUBMIT_ORDER = 'SUBMIT_ORDER';
+export const SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
+export const SUBMIT_FAILURE = 'SUBMIT_FAILURE';
 export const TRY_PASSWORD = 'TRY_PASSWORD';
 export const CHECKED_PASSWORD = 'CHECKED_PASSWORD';
 export const HIDE_PASSWORD_SUCCESS = 'HIDE_PASSWORD_SUCCESS';
@@ -47,6 +50,9 @@ function validatePassword(password) {
           setTimeout(() => {
             dispatch(hidePasswordSuccess());
           }, 5000);
+          setInterval(() => {
+            dispatch(fetchOrdersIfNeeded());
+          }, 15000);
         }
       });
   }
@@ -97,10 +103,7 @@ function shouldFetchOrders(state) {
   if (!state.enteredPassword.isCorrect) {
     return false;
   }
-  if (state.orders.isFetching) {
-    return false;
-  }
-  if (state.orders.isEditing) {
+  if (state.orders.isFetching || state.orders.isSubmitting || state.orders.isEditing) {
     return false;
   }
   return true;
@@ -111,6 +114,64 @@ export function fetchOrdersIfNeeded() {
     const state = getState();
     if (shouldFetchOrders(state)) {
       return dispatch(fetchOrders(state.enteredPassword.password));
+    }
+  };
+}
+
+///////////////////
+
+
+
+function submitOrder() {
+  return {
+    type: SUBMIT_ORDER
+  };
+}
+
+function submitSuccess() {
+  return {
+    type: SUBMIT_SUCCESS
+  };
+}
+
+function submitFailure() {
+  return {
+    type: SUBMIT_FAILURE
+  }
+}
+
+function createOrder(password, order) {
+  return dispatch => {
+    console.log(`creating order: ${JSON.stringify(order)}`);
+    dispatch(submitOrder());
+    return fetch(`/orders/${password}`, {
+        method: "POST",
+        body: JSON.stringify(order)
+      }).then(response => response.json())
+      .then(json => {
+        if (json.submitted) {
+          dispatch(submitSuccess());
+          dispatch(fetchOrdersIfNeeded());
+        }
+        else {
+          dispatch(submitFailure());
+        }
+      });
+  };
+}
+
+function shouldCreateOrder(state) {
+  if (!state.enteredPassword.isCorrect) {
+    return false;
+  }
+  return true;
+}
+
+export function createOrderIfPossible(order) {
+  return (dispatch, getState) => {
+    const state = getState();
+    if (shouldSubmitOrder(state)) {
+      return dispatch(createOrder(state.enteredPassword.password, order));
     }
   };
 }
