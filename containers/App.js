@@ -48,7 +48,8 @@ class App extends Component {
 
   render() {
     const { psw, isCorrect, isChecking, showSuccess, onPswEntered } = this.props;
-    const {orders, isFetching, isEditing, isSubmitting, fetchOrdersIfNeeded} = this.props;
+    const { orders, isFetching, isEditing, isSubmitting, submission, showSubmitSuccess, showSubmitFailure,
+            fetchOrdersIfNeeded, createOrderIfPossible } = this.props;
     
     return (
       <div>
@@ -60,7 +61,12 @@ class App extends Component {
         {isCorrect &&
           <div>
             <AddOrder isSubmitting={isSubmitting}
+                      submission={submission}
                       createOrderIfPossible={createOrderIfPossible}/>
+            <br />
+            {showSubmitSuccess && "Submission succeeded"}
+            {showSubmitFailure && "Submission failed"}
+            <br />
             <br />
             <Orders orders={orders}/>
           </div>
@@ -116,7 +122,7 @@ App.propTypes = {
 function mapStateToProps(state) {
   const {orders, enteredPassword} = state;
   const {password, isCorrect, isChecking, showSuccess} = enteredPassword;
-  const {items, isFetching, isEditing, isSubmitting} = orders;
+  const {items, isFetching, isEditing, isSubmitting, submission, showSubmitSuccess, showSubmitFailure} = orders;
   return  {
     psw: password,
     isCorrect,
@@ -125,7 +131,10 @@ function mapStateToProps(state) {
     orders: items,
     isFetching,
     isEditing,
-    isSubmitting
+    isSubmitting,
+    submission,
+    showSubmitSuccess,
+    showSubmitFailure
   };
   
   // const { selectedReddit, postsByReddit } = state

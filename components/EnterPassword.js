@@ -3,8 +3,8 @@ import React, { Component, PropTypes } from 'react'
 export default class EnterPassword extends Component {
   render() {
     const { isCorrect, isChecking, onEntered, showSuccess } = this.props;
-    let {psw} = this.props;
     console.log(`EnterPassword props: ${JSON.stringify(this.props)}`);
+    let psw;
     
     return (
       <div>

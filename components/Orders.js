@@ -47,16 +47,26 @@ export default class Orders extends Component {
                     : statusIdToName(order.status_id)
                   }
                 </td>
-                <td><a href={order.link}>{order.name}</a></td>
+                <td>
+                  {order.link
+                    ? <a href={order.link}>{order.name}</a>
+                    : order.name
+                  }
+                </td>
                 <td>{order.number}</td>
                 <td>{order.category}</td>
                 <td>{order.material}</td>
                 <td>{order.supplier}</td>
-                <td>{order.price.toString()}</td>
-                <td>{order.quantity.toString()}</td>
-                <td>{`$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`}</td>
+                <td>{order.price && order.price.toString()}</td>
+                <td>{order.quantity && order.quantity.toString()}</td>
+                <td>
+                  {
+                    order.price && order.quantity && 
+                    `$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
+                  }
+                </td>
                 <td>{order.notes}</td>
-                <td>{order.updated ? (new Date(order.updated)).toString() : ""}</td>
+                <td>{order.updated && (new Date(order.updated)).toString()}</td>
               </tr>
             )}
           </tbody>

@@ -6,6 +6,7 @@ export const INVALIDATE_ORDERS = 'INVALIDATE_ORDERS';
 export const SUBMIT_ORDER = 'SUBMIT_ORDER';
 export const SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
 export const SUBMIT_FAILURE = 'SUBMIT_FAILURE';
+export const HIDE_SUBMIT_STATUS = 'HIDE_SUBMIT_STATUS';
 export const TRY_PASSWORD = 'TRY_PASSWORD';
 export const CHECKED_PASSWORD = 'CHECKED_PASSWORD';
 export const HIDE_PASSWORD_SUCCESS = 'HIDE_PASSWORD_SUCCESS';
@@ -122,9 +123,10 @@ export function fetchOrdersIfNeeded() {
 
 
 
-function submitOrder() {
+function submitOrder(order) {
   return {
-    type: SUBMIT_ORDER
+    type: SUBMIT_ORDER,
+    order
   };
 }
 
@@ -137,15 +139,24 @@ function submitSuccess() {
 function submitFailure() {
   return {
     type: SUBMIT_FAILURE
-  }
+  };
+}
+
+function hideSubmitStatus() {
+  return {
+    type: HIDE_SUBMIT_STATUS
+  };
 }
 
 function createOrder(password, order) {
   return dispatch => {
     console.log(`creating order: ${JSON.stringify(order)}`);
-    dispatch(submitOrder());
+    dispatch(submitOrder(order));
     return fetch(`/orders/${password}`, {
         method: "POST",
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
         body: JSON.stringify(order)
       }).then(response => response.json())
       .then(json => {
@@ -156,6 +167,9 @@ function createOrder(password, order) {
         else {
           dispatch(submitFailure());
         }
+        setTimeout(() => {
+          dispatch(hideSubmitStatus());
+        }, 5000);
       });
   };
 }
@@ -170,7 +184,7 @@ function shouldCreateOrder(state) {
 export function createOrderIfPossible(order) {
   return (dispatch, getState) => {
     const state = getState();
-    if (shouldSubmitOrder(state)) {
+    if (shouldCreateOrder(state)) {
       return dispatch(createOrder(state.enteredPassword.password, order));
     }
   };

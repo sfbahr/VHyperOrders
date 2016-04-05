@@ -44,8 +44,8 @@ const app = express();
 
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   util.log(`${req.method} request for '${req.url}'`);
@@ -56,12 +56,12 @@ app.use(express.static("./public"));
 
 app.get("/password/:check", (req, res) => {
   if (req.params.check === password) {
-    res.json({
+    res.status(200).json({
       password: req.params.check,
       isCorrect: true
     });
   } else {
-    res.json({
+    res.status(404).json({
       password: req.params.check,
       isCorrect: false
     });
@@ -96,7 +96,7 @@ app.get(`/orders/${password}`, (req, res) => {
     if (err) {
       res.status(500).json({err});
     } else {
-      res.json(result.rows);
+      res.status(200).json(result.rows);
     }
   });
 });
@@ -117,90 +117,92 @@ app.get(`/orders/:id/changes/${password}`, (req, res) => {
     if (err) {
       res.status(500).json({err});
     } else {
-      res.json(result.rows);
+      res.status(200).json(result.rows);
     }
   });
 });
 
 // Create
 app.post(`/orders/${password}`, (req, res) => {
-  if (req.body.password === password) {
-    const status_id =     req.body.status_id;
-    const tracking_link = req.body.tracking_link;
-    const name =          req.body.name;
-    const number =        req.body.number;
-    const link =          req.body.link;
-    const category =      req.body.category;
-    const material =      req.body.material;
-    const supplier =      req.body.supplier;
-    const price =         req.body.price;
-    const quantity =      req.body.quantity;
-    const notes =         req.body.notes;
-    util.log(`body=${req.body}`);
-    const queryString = String.raw`
-    WITH new_order AS (
-      INSERT INTO orders (
-        status_id,
-        tracking_link,
-        name,
-        number,
-        link,
-        category,
-        material,
-        supplier,
-        price,
-        quantity,
-        notes
-      )
-      SELECT 
-        $1::integer,
-        $2,
-        $3,
-        $4,
-        $5,
-        $6,
-        $7,
-        $8,
-        $9::money,
-        $10::integer,
-        $11
-      RETURNING id
-    )
-    
-    INSERT INTO changes (
-      order_id,
-      old_status_id,
-      new_status_id,
-      datetime
+  util.log(`body=${JSON.stringify(req.body)}`);
+  const status_id =     req.body.status_id;
+  const tracking_link = req.body.tracking_link;
+  const name =          req.body.name;
+  const number =        req.body.number;
+  const link =          req.body.link;
+  const category =      req.body.category;
+  const material =      req.body.material;
+  const supplier =      req.body.supplier;
+  const price =         req.body.price;
+  const quantity =      req.body.quantity;
+  const notes =         req.body.notes;
+  
+  const queryString = String.raw`
+  WITH new_order AS (
+    INSERT INTO orders (
+      status_id,
+      tracking_link,
+      name,
+      number,
+      link,
+      category,
+      material,
+      supplier,
+      price,
+      quantity,
+      notes
     )
     SELECT 
-      n.id,
-      0,
       $1::integer,
-      now()
-    FROM new_order n
-    ;`;
-    
-    pgQuery(queryString, [status_id,
-                          tracking_link,
-                          name,
-                          number,
-                          link,
-                          category,
-                          material,
-                          supplier,
-                          price,
-                          quantity,
-                          notes], (err, result) => {
-      if (err) {
-        res.status(500).json({err, submitted: false});
-      } else {
-        util.log(result.rows);
-        util.log(JSON.stringify(result.rows));
-        res.json(Object.assign({}, result.rows, {submitted: true}));
-      }
-    });
-  }
+      $2,
+      $3,
+      $4,
+      $5,
+      $6,
+      $7,
+      $8,
+      $9::money,
+      $10::integer,
+      $11
+    RETURNING id
+  )
+  
+  INSERT INTO changes (
+    order_id,
+    old_status_id,
+    new_status_id,
+    datetime
+  )
+  SELECT 
+    n.id,
+    0,
+    $1::integer,
+    now()
+  FROM new_order n
+  RETURNING id
+  ;`;
+  
+  pgQuery(queryString, [status_id,
+                        tracking_link,
+                        name,
+                        number,
+                        link,
+                        category,
+                        material,
+                        supplier,
+                        price,
+                        quantity,
+                        notes], (err, result) => {
+    util.log(`error: ${err}`);
+    if (err) {
+      util.log("sending failure");
+      res.status(500).json({err, submitted: false});
+    } else {
+      util.log(`result: ${result.rows}`);
+      util.log(JSON.stringify(result.rows));
+      res.status(200).json({id: result.rows[0].id, submitted: true});
+    }
+  });
 });
 
 // Update

@@ -8,7 +8,8 @@ import {
   RECEIVE_ORDERS,
   SUBMIT_ORDER,
   SUBMIT_SUCCESS,
-  SUBMIT_FAILURE
+  SUBMIT_FAILURE,
+  HIDE_SUBMIT_STATUS
 } from '../actions'
 
 function enteredPassword(state = {
@@ -42,6 +43,21 @@ function orders(state = {
   isFetching: false,
   isEditing: false,
   isSubmitting: false,
+  submission: {
+    status_id: 1,
+    tracking_link: null,
+    name: null,
+    number: null,
+    link: null,
+    category: null,
+    material: null,
+    supplier: null,
+    price: null,
+    quantity: null,
+    notes: null
+  },
+  showSubmitSuccess: false,
+  showSubmitFailure: false,
   items: []
 }, action) {
   switch (action.type) {
@@ -57,15 +73,36 @@ function orders(state = {
       });
     case SUBMIT_ORDER:
       return Object.assign({}, state, {
-        isSubmitting: true
+        isSubmitting: true,
+        submission: action.order
       });
     case SUBMIT_SUCCESS:
       return Object.assign({}, state, {
-        isSubmitting: false
+        isSubmitting: false,
+        submission: {
+          status_id: 1,
+          tracking_link: null,
+          name: null,
+          number: null,
+          link: null,
+          category: null,
+          material: null,
+          supplier: null,
+          price: null,
+          quantity: null,
+          notes: null
+        },
+        showSubmitSuccess: true
       });
     case SUBMIT_FAILURE:
       return Object.assign({}, state, {
-        isSubmitting: false
+        isSubmitting: false,
+        showSubmitFailure: true
+      });
+    case HIDE_SUBMIT_STATUS:
+      return Object.assign({}, state, {
+        showSubmitSuccess: false,
+        showSubmitFailure: false
       });
     default: 
       return state;
