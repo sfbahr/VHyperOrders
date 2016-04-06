@@ -10,6 +10,11 @@ export const HIDE_SUBMIT_STATUS = 'HIDE_SUBMIT_STATUS';
 export const TRY_PASSWORD = 'TRY_PASSWORD';
 export const CHECKED_PASSWORD = 'CHECKED_PASSWORD';
 export const HIDE_PASSWORD_SUCCESS = 'HIDE_PASSWORD_SUCCESS';
+export const START_EDITING = 'START_EDITING';
+export const FINISH_EDITING = 'FINISH_EDITING';
+export const SUBMIT_EDIT = 'SUBMIT_EDIT';
+export const EDIT_SUCCESS = 'EDIT_SUCCESS';
+export const EDIT_FAILURE = 'EDIT_FAILURE';
 
 
 export function invalidateOrders() {
@@ -50,7 +55,7 @@ function validatePassword(password) {
           dispatch(fetchOrdersIfNeeded());
           setTimeout(() => {
             dispatch(hidePasswordSuccess());
-          }, 5000);
+          }, 2000);
           setInterval(() => {
             dispatch(fetchOrdersIfNeeded());
           }, 15000);
@@ -186,6 +191,88 @@ export function createOrderIfPossible(order) {
     const state = getState();
     if (shouldCreateOrder(state)) {
       return dispatch(createOrder(state.enteredPassword.password, order));
+    }
+  };
+}
+
+///////////////////
+
+export function startEditing(id) {
+  return {
+    type: START_EDITING,
+    id
+  };
+}
+
+function finishEditing() {
+  return {
+    type: FINISH_EDITING
+  };
+}
+
+function startSubmitEdit() {
+  return {
+    type: SUBMIT_EDIT
+  }
+}
+
+function editSuccess() {
+  return {
+    type: EDIT_SUCCESS
+  };
+}
+
+function editFailure() {
+  return {
+    type: EDIT_FAILURE
+  };
+}
+
+
+
+export function submitEdit(order) {
+  return (dispatch, getState) => {
+    const state = getState();
+    if (state.enteredPassword.isCorrect) {
+      console.log(`creating order: ${JSON.stringify(order)}`);
+      dispatch(startSubmitEdit());
+      dispatch(finishEditing());
+      let oldOrder;
+      let i;
+      for (i = 0; i < state.orders.items.length; i++) {
+        const existingOrder = state.orders.items[i];
+        if (existingOrder.id === order.id) {
+          oldOrder = existingOrder;
+          break;
+        }
+      }
+      if (!oldOrder) {
+        console.log(`Couldn't find old Order with id ${order.id}`);
+        return dispatch(editFailure());
+      }
+      
+      const editedOrder = Object.assign({}, oldOrder, order, {
+        old_status_id: oldOrder.status_id
+      });
+      
+      console.log(`edited order: ${JSON.stringify(editedOrder)}`);
+      
+      return fetch(`/orders/${state.enteredPassword.password}`, {
+          method: "PUT",
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          body: JSON.stringify(editedOrder)
+        }).then(response => response.json())
+        .then(json => {
+          if (json.success) {
+            dispatch(editSuccess());
+            dispatch(fetchOrdersIfNeeded());
+          }
+          else {
+            dispatch(editFailure());
+          }
+        });
     }
   };
 }

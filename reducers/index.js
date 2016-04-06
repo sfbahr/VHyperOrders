@@ -9,7 +9,12 @@ import {
   SUBMIT_ORDER,
   SUBMIT_SUCCESS,
   SUBMIT_FAILURE,
-  HIDE_SUBMIT_STATUS
+  HIDE_SUBMIT_STATUS,
+  START_EDITING,
+  FINISH_EDITING,
+  SUBMIT_EDIT,
+  EDIT_SUCCESS,
+  EDIT_FAILURE,
 } from '../actions'
 
 function enteredPassword(state = {
@@ -39,9 +44,7 @@ function enteredPassword(state = {
   }
 }
 
-function orders(state = {
-  isFetching: false,
-  isEditing: false,
+function addOrder(state = {
   isSubmitting: false,
   submission: {
     status_id: 1,
@@ -58,19 +61,8 @@ function orders(state = {
   },
   showSubmitSuccess: false,
   showSubmitFailure: false,
-  items: []
 }, action) {
   switch (action.type) {
-    case REQUEST_ORDERS:
-      return Object.assign({}, state, {
-        isFetching: true,
-      });
-    case RECEIVE_ORDERS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        items: action.orders,
-        lastUpdated: action.receivedAt
-      });
     case SUBMIT_ORDER:
       return Object.assign({}, state, {
         isSubmitting: true,
@@ -103,6 +95,52 @@ function orders(state = {
       return Object.assign({}, state, {
         showSubmitSuccess: false,
         showSubmitFailure: false
+      });
+    default:
+      return state;
+  }
+}
+
+function orders(state = {
+  isFetching: false,
+  isEditing: false,
+  isSubmittingEdit: false,
+  editingId: null,
+  items: []
+}, action) {
+  switch (action.type) {
+    case REQUEST_ORDERS:
+      return Object.assign({}, state, {
+        isFetching: true,
+      });
+    case RECEIVE_ORDERS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        items: action.orders,
+        lastUpdated: action.receivedAt
+      });
+    case START_EDITING:
+      return Object.assign({}, state, {
+        isEditing: true,
+        editingId: action.id
+      });
+    case FINISH_EDITING:
+      return Object.assign({}, state, {
+        isEditing: false
+      });
+    case SUBMIT_EDIT:
+      return Object.assign({}, state, {
+        isSubmittingEdit: true
+      });
+    case EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        isSubmittingEdit: false,
+        editingId: null
+      });
+    case EDIT_FAILURE:
+      return Object.assign({}, state, {
+        isSubmittingEdit: false,
+        editingId: null
       });
     default: 
       return state;
@@ -151,6 +189,7 @@ function orders(state = {
 
 const rootReducer = combineReducers({
   orders,
+  addOrder,
   enteredPassword
 })
 

@@ -207,9 +207,124 @@ app.post(`/orders/${password}`, (req, res) => {
 
 // Update
 app.put(`/orders/${password}`, (req, res) => {
-  if (req.body.password === password) {
-    // skierTerms.push(req.body);
-    // res.json(skierTerms);
+  util.log(`body=${JSON.stringify(req.body)}`);
+  const id =            req.body.id;
+  const status_id =     req.body.status_id;
+  const tracking_link = req.body.tracking_link;
+  const name =          req.body.name;
+  const number =        req.body.number;
+  const link =          req.body.link;
+  const category =      req.body.category;
+  const material =      req.body.material;
+  const supplier =      req.body.supplier;
+  const price =         req.body.price;
+  const quantity =      req.body.quantity;
+  const notes =         req.body.notes;
+  
+  const old_status_id = req.body.old_status_id;
+  
+  if (status_id === old_status_id) {
+    var queryString = String.raw`
+    UPDATE orders SET
+      status_id=$1::integer,
+      tracking_link=$2,
+      name=$3,
+      number=$4,
+      link=$5,
+      category=$6,
+      material=$7,
+      supplier=$8,
+      price=$9::money,
+      quantity=$10::integer,
+      notes=$11
+    WHERE id=$12::integer
+    ;`;
+    
+    pgQuery(queryString, [status_id,
+                          tracking_link,
+                          name,
+                          number,
+                          link,
+                          category,
+                          material,
+                          supplier,
+                          price,
+                          quantity,
+                          notes,
+                          id], (err, result) => {
+      util.log(`error: ${err}`);
+      if (err) {
+        util.log("sending failure");
+        res.status(500).json({err, success: false});
+      } else {
+        util.log(`result: ${result.rows}`);
+        util.log(JSON.stringify(result.rows));
+        res.status(200).json({success: true});
+      }
+    });
+  } else {
+    const queryString1 = String.raw`
+    UPDATE orders SET
+      status_id=$1::integer,
+      tracking_link=$2,
+      name=$3,
+      number=$4,
+      link=$5,
+      category=$6,
+      material=$7,
+      supplier=$8,
+      price=$9::money,
+      quantity=$10::integer,
+      notes=$11
+    WHERE id=$12::integer
+    ;`;
+    const queryString2 = String.raw`
+    INSERT INTO changes (
+      order_id,
+      old_status_id,
+      new_status_id,
+      datetime
+    )
+    SELECT 
+      $2::integer,
+      $3::integer,
+      $1::integer,
+      now()
+    ;`;
+    
+    pgQuery(queryString1, [status_id,
+                          tracking_link,
+                          name,
+                          number,
+                          link,
+                          category,
+                          material,
+                          supplier,
+                          price,
+                          quantity,
+                          notes,
+                          id], (err, result) => {
+      util.log(`error: ${err}`);
+      if (err) {
+        util.log("sending failure");
+        res.status(500).json({err, success: false, change_success: false});
+      } else {
+        util.log(`result1: ${result.rows}`);
+        util.log(JSON.stringify(result.rows));
+        pgQuery(queryString2, [status_id,
+                              id,
+                              old_status_id], (err, result) => {
+          if (err) {
+            util.log("sending failure");
+            res.status(500).json({err, success: true, change_success: false});
+          } else {
+            util.log(`result2: ${result.rows}`);
+            util.log(JSON.stringify(result.rows));
+            res.status(200).json({success: true, change_success: true});
+          }
+        });
+      }
+    });
   }
 });
 

@@ -19,7 +19,7 @@ export const statusIdToName = (id) => {
 
 export default class Orders extends Component {
   render() {
-    const {orders} = this.props;
+    const {orders, isEditing, isSubmittingEdit, editingId, startEditing, submitEdit} = this.props;
     
     return (
       <div>
@@ -37,14 +37,37 @@ export default class Orders extends Component {
               <th>Total Price</th>
               <th>Notes</th>
               <th>Status Updated</th>
+              <th>Actions</th>
             </tr>
             
             {orders.map((order) =>
               <tr key={order.id}>
                 <td>
-                  {order.tracking_link
-                    ? <a href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
-                    : statusIdToName(order.status_id)
+                  {editingId && editingId === order.id
+                    ? <div>
+                        <select defaultValue={order.status_id} ref={node => {
+                          this.status_id = node;
+                        }}>
+                          <option value="1">
+                            {statusIdToName(1)}
+                          </option>
+                          <option value="2">
+                            {statusIdToName(2)}
+                          </option>
+                          <option value="3">
+                            {statusIdToName(3)}
+                          </option>
+                          <option value="4">
+                            {statusIdToName(4)}
+                          </option>
+                        </select>
+                        <input defaultValue={order.tracking_link} placeholder="Tracking Link" ref={node => {
+                          this.tracking_link = node;
+                        }} />
+                      </div>
+                    : order.tracking_link
+                      ? <a href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
+                      : statusIdToName(order.status_id)
                   }
                 </td>
                 <td>
@@ -67,6 +90,37 @@ export default class Orders extends Component {
                 </td>
                 <td>{order.notes}</td>
                 <td>{order.updated && (new Date(order.updated)).toString()}</td>
+                <td>
+                  {
+                    editingId && editingId === order.id
+                    ? <button disabled={isSubmittingEdit} onClick={() => {
+                        const editOrder = {
+                          id: order.id,
+                          status_id: Number(this.status_id.value),
+                          tracking_link: this.tracking_link.value
+                          // name: this.name.value,
+                          // number: this.number.value,
+                          // link: this.link.value,
+                          // category: this.category.value,
+                          // material: this.material.value,
+                          // supplier: this.supplier.value,
+                          // price: (Number(this.price.value.replace(/[^0-9\.]/g, ""))).toFixed(2),
+                          // quantity: Number(this.quantity.value),
+                          // notes: this.notes.value
+                        };
+                        console.log(`Edit order ${order.id} to: ${JSON.stringify(editOrder)}`);
+                        submitEdit(editOrder);
+                      }}>
+                        Save
+                      </button>
+                    : <button disabled={isSubmittingEdit} onClick={() => {
+                        startEditing(order.id);
+                      }}>
+                        Edit
+                      </button>
+                  }
+                  
+                </td>
               </tr>
             )}
           </tbody>

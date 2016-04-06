@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import {fetchOrdersIfNeeded,
         createOrderIfPossible,
         validatePasswordIfNeeded,
-        invalidateOrders } from '../actions'
+        invalidateOrders,
+        startEditing,
+        submitEdit} from '../actions'
 import EnterPassword from '../components/EnterPassword'
 import AddOrder from '../components/AddOrder'
 import Orders from '../components/Orders'
@@ -48,8 +50,10 @@ class App extends Component {
 
   render() {
     const { psw, isCorrect, isChecking, showSuccess, onPswEntered } = this.props;
-    const { orders, isFetching, isEditing, isSubmitting, submission, showSubmitSuccess, showSubmitFailure,
-            fetchOrdersIfNeeded, createOrderIfPossible } = this.props;
+    const { isSubmitting, submission, showSubmitSuccess, showSubmitFailure,
+            createOrderIfPossible} = this.props;
+    const { orders, isFetching, isEditing, isSubmittingEdit, editingId, 
+            startEditing, submitEdit, fetchOrdersIfNeeded } = this.props;
     
     return (
       <div>
@@ -68,7 +72,12 @@ class App extends Component {
             {showSubmitFailure && "Submission failed"}
             <br />
             <br />
-            <Orders orders={orders}/>
+            <Orders orders={orders}
+                    isEditing={isEditing}
+                    isSubmittingEdit={isSubmittingEdit}
+                    editingId={editingId}
+                    startEditing={startEditing}
+                    submitEdit={submitEdit} />
           </div>
         }
       </div>
@@ -120,9 +129,10 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const {orders, enteredPassword} = state;
+  const {orders, addOrder, enteredPassword} = state;
   const {password, isCorrect, isChecking, showSuccess} = enteredPassword;
-  const {items, isFetching, isEditing, isSubmitting, submission, showSubmitSuccess, showSubmitFailure} = orders;
+  const {isSubmitting, submission, showSubmitSuccess, showSubmitFailure} = addOrder;
+  const {items, isFetching, isEditing, isSubmittingEdit, editingId} = orders;
   return  {
     psw: password,
     isCorrect,
@@ -131,6 +141,8 @@ function mapStateToProps(state) {
     orders: items,
     isFetching,
     isEditing,
+    isSubmittingEdit,
+    editingId,
     isSubmitting,
     submission,
     showSubmitSuccess,
@@ -165,6 +177,12 @@ function mapDispatchToProps(dispatch) {
     },
     createOrderIfPossible: (order) => {
       dispatch(createOrderIfPossible(order));
+    },
+    startEditing: (id) => {
+      dispatch(startEditing(id));
+    },
+    submitEdit: (order) => {
+      dispatch(submitEdit(order));
     }
   };
 }

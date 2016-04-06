@@ -69,7 +69,7 @@ export default class AddOrder extends Component {
     
     return (
       <div>
-        Add a order:
+        Add an order:
         <form onSubmit={e => {
           e.preventDefault();
           if (!this.name.value.trim()) {
@@ -140,8 +140,9 @@ export default class AddOrder extends Component {
           <button type="submit" disabled={isSubmitting}>
             Submit
           </button>
+          <button onClick={this.clearAddOrderForm}>Clear</button>
         </form>
-        <button onClick={this.clearAddOrderForm}>Clear</button>
+
       </div>
     );
     
