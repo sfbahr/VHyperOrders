@@ -66,13 +66,13 @@ export default class Orders extends Component {
                         }} />
                       </div>
                     : order.tracking_link
-                      ? <a href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
+                      ? <a target="_blank" href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
                       : statusIdToName(order.status_id)
                   }
                 </td>
                 <td>
                   {order.link
-                    ? <a href={order.link}>{order.name}</a>
+                    ? <a target="_blank" href={order.link}>{order.name}</a>
                     : order.name
                   }
                 </td>
