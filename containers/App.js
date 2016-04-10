@@ -73,7 +73,21 @@ class App extends Component {
             {showSubmitFailure && "Submission failed"}
             <br />
             <br />
+            Orders:
+            <br />
             <Orders orders={orders}
+                    statusIncludes={[0, 1, 2, 3]}
+                    isEditing={isEditing}
+                    isSubmittingEdit={isSubmittingEdit}
+                    editingId={editingId}
+                    startEditing={startEditing}
+                    stopEditing={stopEditing}
+                    submitEdit={submitEdit} />
+            <br />
+            Arrived Orders:
+            <br />
+            <Orders orders={orders}
+                    statusIncludes={[4]}
                     isEditing={isEditing}
                     isSubmittingEdit={isSubmittingEdit}
                     editingId={editingId}

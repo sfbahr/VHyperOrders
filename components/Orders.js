@@ -19,7 +19,7 @@ export const statusIdToName = (id) => {
 
 export default class Orders extends Component {
   render() {
-    const { orders, isEditing, isSubmittingEdit, editingId,
+    const { statusIncludes, orders, isEditing, isSubmittingEdit, editingId,
             startEditing, stopEditing, submitEdit} = this.props;
     
     return (
@@ -41,7 +41,9 @@ export default class Orders extends Component {
               <th>Actions</th>
             </tr>
             
-            {orders.map((order) =>
+            {orders.filter((order) => {
+              return statusIncludes.indexOf(order.status_id) !== -1;
+            }).map((order) =>
               editingId && editingId === order.id
                 ? <tr key={order.id}>
                     <td>
