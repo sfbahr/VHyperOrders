@@ -5,6 +5,7 @@ import {fetchOrdersIfNeeded,
         validatePasswordIfNeeded,
         invalidateOrders,
         startEditing,
+        stopEditing,
         submitEdit} from '../actions'
 import EnterPassword from '../components/EnterPassword'
 import AddOrder from '../components/AddOrder'
@@ -53,7 +54,7 @@ class App extends Component {
     const { isSubmitting, submission, showSubmitSuccess, showSubmitFailure,
             createOrderIfPossible} = this.props;
     const { orders, isFetching, isEditing, isSubmittingEdit, editingId, 
-            startEditing, submitEdit, fetchOrdersIfNeeded } = this.props;
+            startEditing, stopEditing, submitEdit, fetchOrdersIfNeeded } = this.props;
     
     return (
       <div>
@@ -77,6 +78,7 @@ class App extends Component {
                     isSubmittingEdit={isSubmittingEdit}
                     editingId={editingId}
                     startEditing={startEditing}
+                    stopEditing={stopEditing}
                     submitEdit={submitEdit} />
           </div>
         }
@@ -180,6 +182,9 @@ function mapDispatchToProps(dispatch) {
     },
     startEditing: (id) => {
       dispatch(startEditing(id));
+    },
+    stopEditing: () => {
+      dispatch(stopEditing());
     },
     submitEdit: (order) => {
       dispatch(submitEdit(order));

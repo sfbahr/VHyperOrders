@@ -11,7 +11,7 @@ import {
   SUBMIT_FAILURE,
   HIDE_SUBMIT_STATUS,
   START_EDITING,
-  FINISH_EDITING,
+  STOP_EDITING,
   SUBMIT_EDIT,
   EDIT_SUCCESS,
   EDIT_FAILURE,
@@ -124,9 +124,10 @@ function orders(state = {
         isEditing: true,
         editingId: action.id
       });
-    case FINISH_EDITING:
+    case STOP_EDITING:
       return Object.assign({}, state, {
-        isEditing: false
+        isEditing: false,
+        editingId: null
       });
     case SUBMIT_EDIT:
       return Object.assign({}, state, {
@@ -134,13 +135,11 @@ function orders(state = {
       });
     case EDIT_SUCCESS:
       return Object.assign({}, state, {
-        isSubmittingEdit: false,
-        editingId: null
+        isSubmittingEdit: false
       });
     case EDIT_FAILURE:
       return Object.assign({}, state, {
-        isSubmittingEdit: false,
-        editingId: null
+        isSubmittingEdit: false
       });
     default: 
       return state;

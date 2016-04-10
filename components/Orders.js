@@ -19,7 +19,8 @@ export const statusIdToName = (id) => {
 
 export default class Orders extends Component {
   render() {
-    const {orders, isEditing, isSubmittingEdit, editingId, startEditing, submitEdit} = this.props;
+    const { orders, isEditing, isSubmittingEdit, editingId,
+            startEditing, stopEditing, submitEdit} = this.props;
     
     return (
       <div>
@@ -41,10 +42,10 @@ export default class Orders extends Component {
             </tr>
             
             {orders.map((order) =>
-              <tr key={order.id}>
-                <td>
-                  {editingId && editingId === order.id
-                    ? <div>
+              editingId && editingId === order.id
+                ? <tr key={order.id}>
+                    <td>
+                      <div>
                         <select defaultValue={order.status_id} ref={node => {
                           this.status_id = node;
                         }}>
@@ -65,63 +66,120 @@ export default class Orders extends Component {
                           this.tracking_link = node;
                         }} />
                       </div>
-                    : order.tracking_link
-                      ? <a target="_blank" href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
-                      : statusIdToName(order.status_id)
-                  }
-                </td>
-                <td>
-                  {order.link
-                    ? <a target="_blank" href={order.link}>{order.name}</a>
-                    : order.name
-                  }
-                </td>
-                <td>{order.number}</td>
-                <td>{order.category}</td>
-                <td>{order.material}</td>
-                <td>{order.supplier}</td>
-                <td>{order.price && order.price.toString()}</td>
-                <td>{order.quantity && order.quantity.toString()}</td>
-                <td>
-                  {
-                    order.price && order.quantity && 
-                    `$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
-                  }
-                </td>
-                <td>{order.notes}</td>
-                <td>{order.updated && (new Date(order.updated)).toString()}</td>
-                <td>
-                  {
-                    editingId && editingId === order.id
-                    ? <button disabled={isSubmittingEdit} onClick={() => {
+                    </td>
+                    <td>
+                      <input defaultValue={order.name} placeholder="Name (required)" ref={node => {
+                        this.name = node;
+                      }} />
+                      <input defaultValue={order.link} placeholder="Link" ref={node => {
+                        this.link = node;
+                      }} />
+                    </td>
+                    <td>
+                      <input defaultValue={order.number} placeholder="Number" ref={node => {
+                        this.number = node;
+                      }} />
+                    </td>
+                    <td>
+                      <input defaultValue={order.category} placeholder="Category" ref={node => {
+                        this.category = node;
+                      }} />
+                    </td>
+                    <td>
+                      <input defaultValue={order.material} placeholder="Material" ref={node => {
+                        this.material = node;
+                      }} />
+                    </td>
+                    <td>
+                      <input defaultValue={order.supplier} placeholder="Supplier" ref={node => {
+                        this.supplier = node;
+                      }} />
+                    </td>
+                    <td>
+                      <input defaultValue={order.price} placeholder="Price per item" ref={node => {
+                        this.price = node;
+                      }} />
+                    </td>
+                    <td>
+                      <input defaultValue={order.quantity} placeholder="Quantity" ref={node => {
+                        this.quantity = node;
+                      }} />
+                    </td>
+                    <td>
+                      {
+                        order.price && order.quantity &&
+                        `$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
+                      }
+                    </td>
+                    <td>
+                      <input defaultValue={order.notes} placeholder="Notes" ref={node => {
+                        this.notes = node;
+                      }} />
+                    </td>
+                    <td>{order.updated && (new Date(order.updated)).toString()}</td>
+                    <td>
+                      <button disabled={isSubmittingEdit} onClick={() => {
                         const editOrder = {
                           id: order.id,
                           status_id: Number(this.status_id.value),
-                          tracking_link: this.tracking_link.value
-                          // name: this.name.value,
-                          // number: this.number.value,
-                          // link: this.link.value,
-                          // category: this.category.value,
-                          // material: this.material.value,
-                          // supplier: this.supplier.value,
-                          // price: (Number(this.price.value.replace(/[^0-9\.]/g, ""))).toFixed(2),
-                          // quantity: Number(this.quantity.value),
-                          // notes: this.notes.value
+                          tracking_link: this.tracking_link.value,
+                          name: this.name.value,
+                          number: this.number.value,
+                          link: this.link.value,
+                          category: this.category.value,
+                          material: this.material.value,
+                          supplier: this.supplier.value,
+                          price: (Number(this.price.value.replace(/[^0-9\.]/g, ""))).toFixed(2),
+                          quantity: Number(this.quantity.value),
+                          notes: this.notes.value
                         };
                         console.log(`Edit order ${order.id} to: ${JSON.stringify(editOrder)}`);
                         submitEdit(editOrder);
                       }}>
                         Save
                       </button>
-                    : <button disabled={isSubmittingEdit} onClick={() => {
+                      <button disabled={isSubmittingEdit} onClick={() => {
+                        stopEditing();
+                      }}>
+                        Cancel
+                      </button>
+                    </td>
+                  </tr>
+                : <tr key={order.id}>
+                    <td>
+                      {order.tracking_link
+                        ? <a target="_blank" href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
+                        : statusIdToName(order.status_id)
+                      }
+                    </td>
+                    <td>
+                      {order.link
+                        ? <a target="_blank" href={order.link}>{order.name}</a>
+                        : order.name
+                      }
+                    </td>
+                    <td>{order.number}</td>
+                    <td>{order.category}</td>
+                    <td>{order.material}</td>
+                    <td>{order.supplier}</td>
+                    <td>{order.price && order.price.toString()}</td>
+                    <td>{order.quantity && order.quantity.toString()}</td>
+                    <td>
+                      {
+                        order.price && order.quantity && 
+                        `$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
+                      }
+                    </td>
+                    <td>{order.notes}</td>
+                    <td>{order.updated && (new Date(order.updated)).toString()}</td>
+                    <td>
+                      <button disabled={isSubmittingEdit} onClick={() => {
                         startEditing(order.id);
                       }}>
                         Edit
                       </button>
-                  }
-                  
-                </td>
-              </tr>
+                    </td>
+                  </tr>
             )}
           </tbody>
         </table>

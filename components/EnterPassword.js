@@ -18,7 +18,7 @@ export default class EnterPassword extends Component {
               }
               onEntered(psw.value);
             }} disabled={isCorrect || isChecking}>
-              <input type="password" autocomplete="on" ref={node => {
+              <input type="password" autoComplete="on" ref={node => {
                 psw = node;
               }} />
               <button type="submit" disabled={isCorrect || isChecking}>

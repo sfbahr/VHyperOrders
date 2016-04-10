@@ -11,7 +11,7 @@ export const TRY_PASSWORD = 'TRY_PASSWORD';
 export const CHECKED_PASSWORD = 'CHECKED_PASSWORD';
 export const HIDE_PASSWORD_SUCCESS = 'HIDE_PASSWORD_SUCCESS';
 export const START_EDITING = 'START_EDITING';
-export const FINISH_EDITING = 'FINISH_EDITING';
+export const STOP_EDITING = 'STOP_EDITING';
 export const SUBMIT_EDIT = 'SUBMIT_EDIT';
 export const EDIT_SUCCESS = 'EDIT_SUCCESS';
 export const EDIT_FAILURE = 'EDIT_FAILURE';
@@ -204,9 +204,9 @@ export function startEditing(id) {
   };
 }
 
-function finishEditing() {
+export function stopEditing() {
   return {
-    type: FINISH_EDITING
+    type: STOP_EDITING
   };
 }
 
@@ -236,7 +236,7 @@ export function submitEdit(order) {
     if (state.enteredPassword.isCorrect) {
       console.log(`creating order: ${JSON.stringify(order)}`);
       dispatch(startSubmitEdit());
-      dispatch(finishEditing());
+      dispatch(stopEditing());
       let oldOrder;
       let i;
       for (i = 0; i < state.orders.items.length; i++) {
