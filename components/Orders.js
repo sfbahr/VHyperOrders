@@ -24,22 +24,44 @@ export default class Orders extends Component {
     
     return (
       <div>
-        <table className="table-bordered table-striped table-responsive">
-          <tbody>
-            <tr>
-              <th>Status</th>
-              <th>Name</th>
-              <th>Number</th>
-              <th>Category</th>
-              <th>Material</th>
-              <th>Supplier</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total Price</th>
-              <th>Notes</th>
-              <th>Status Updated</th>
-              <th>Actions</th>
-            </tr>
+        <div className="row">
+          <div className="col-xs-4 col-md-2 col-lg-1">
+            Status
+          </div>
+          <div className="col-xs-8 col-md-6 col-lg-3">
+            Name
+          </div>
+          <div className="col-xs-6 col-md-2 col-lg-1">
+            Number
+          </div>
+          <div className="col-xs-6 col-md-2 col-lg-1">
+            Category
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Material
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Supplier
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Price
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Quantity
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Total Price
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Notes
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Status Updated
+          </div>
+          <div className="col-xs- col-md- col-lg-">
+            Actions
+          </div>
+        </div>
             
             {orders.filter((order) => {
               return statusIncludes.indexOf(order.status_id) !== -1;
