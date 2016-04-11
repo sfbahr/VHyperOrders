@@ -48,7 +48,7 @@ export default class Orders extends Component {
                 ? <tr key={order.id}>
                     <td>
                       <div>
-                        <select defaultValue={order.status_id} ref={node => {
+                        <select className="form-control" defaultValue={order.status_id} ref={node => {
                           this.status_id = node;
                         }}>
                           <option value="1">
@@ -64,46 +64,46 @@ export default class Orders extends Component {
                             {statusIdToName(4)}
                           </option>
                         </select>
-                        <input defaultValue={order.tracking_link} placeholder="Tracking Link" ref={node => {
+                        <input className="form-control" defaultValue={order.tracking_link} placeholder="Tracking Link" ref={node => {
                           this.tracking_link = node;
                         }} />
                       </div>
                     </td>
                     <td>
-                      <input defaultValue={order.name} placeholder="Name (required)" ref={node => {
+                      <input className="form-control" defaultValue={order.name} placeholder="Name (required)" ref={node => {
                         this.name = node;
                       }} />
-                      <input defaultValue={order.link} placeholder="Link" ref={node => {
+                      <input className="form-control" defaultValue={order.link} placeholder="Link" ref={node => {
                         this.link = node;
                       }} />
                     </td>
                     <td>
-                      <input defaultValue={order.number} placeholder="Number" ref={node => {
+                      <input className="form-control" defaultValue={order.number} placeholder="Number" ref={node => {
                         this.number = node;
                       }} />
                     </td>
                     <td>
-                      <input defaultValue={order.category} placeholder="Category" ref={node => {
+                      <input className="form-control" defaultValue={order.category} placeholder="Category" ref={node => {
                         this.category = node;
                       }} />
                     </td>
                     <td>
-                      <input defaultValue={order.material} placeholder="Material" ref={node => {
+                      <input className="form-control" defaultValue={order.material} placeholder="Material" ref={node => {
                         this.material = node;
                       }} />
                     </td>
                     <td>
-                      <input defaultValue={order.supplier} placeholder="Supplier" ref={node => {
+                      <input className="form-control" defaultValue={order.supplier} placeholder="Supplier" ref={node => {
                         this.supplier = node;
                       }} />
                     </td>
                     <td>
-                      <input defaultValue={order.price} placeholder="Price per item" ref={node => {
+                      <input className="form-control" defaultValue={order.price} placeholder="Price per item" ref={node => {
                         this.price = node;
                       }} />
                     </td>
                     <td>
-                      <input defaultValue={order.quantity} placeholder="Quantity" ref={node => {
+                      <input className="form-control" defaultValue={order.quantity} placeholder="Quantity" ref={node => {
                         this.quantity = node;
                       }} />
                     </td>
@@ -114,13 +114,13 @@ export default class Orders extends Component {
                       }
                     </td>
                     <td>
-                      <input defaultValue={order.notes} placeholder="Notes" ref={node => {
+                      <input className="form-control" defaultValue={order.notes} placeholder="Notes" ref={node => {
                         this.notes = node;
                       }} />
                     </td>
                     <td>{order.updated && (new Date(order.updated)).toString()}</td>
                     <td>
-                      <button disabled={isSubmittingEdit} onClick={() => {
+                      <button className="btn btn-success" disabled={isSubmittingEdit} onClick={() => {
                         const editOrder = {
                           id: order.id,
                           status_id: Number(this.status_id.value),
@@ -140,7 +140,8 @@ export default class Orders extends Component {
                       }}>
                         Save
                       </button>
-                      <button disabled={isSubmittingEdit} onClick={() => {
+                      &nbsp;
+                      <button className="btn btn-danger" disabled={isSubmittingEdit} onClick={() => {
                         stopEditing();
                       }}>
                         Cancel
@@ -175,7 +176,7 @@ export default class Orders extends Component {
                     <td>{order.notes}</td>
                     <td>{order.updated && (new Date(order.updated)).toString()}</td>
                     <td>
-                      <button disabled={isSubmittingEdit} onClick={() => {
+                      <button className="btn" disabled={isSubmittingEdit} onClick={() => {
                         startEditing(order.id);
                       }}>
                         Edit
