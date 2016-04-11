@@ -24,51 +24,14 @@ export default class Orders extends Component {
     
     return (
       <div>
-        <div className="row">
-          <div className="col-xs-4 col-md-2 col-lg-1">
-            Status
-          </div>
-          <div className="col-xs-8 col-md-6 col-lg-3">
-            Name
-          </div>
-          <div className="col-xs-6 col-md-2 col-lg-1">
-            Number
-          </div>
-          <div className="col-xs-6 col-md-2 col-lg-1">
-            Category
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Material
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Supplier
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Price
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Quantity
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Total Price
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Notes
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Status Updated
-          </div>
-          <div className="col-xs- col-md- col-lg-">
-            Actions
-          </div>
-        </div>
-            
-            {orders.filter((order) => {
-              return statusIncludes.indexOf(order.status_id) !== -1;
-            }).map((order) =>
-              editingId && editingId === order.id
-                ? <tr key={order.id}>
-                    <td>
+        {orders.filter((order) => {
+          return statusIncludes.indexOf(order.status_id) !== -1;
+        }).map((order) =>
+          editingId && editingId === order.id
+            ? <div className="row" key={order.id}>
+                <div className="col-xs-12 order-container">
+                  <div className="row">
+                    <div className="col-xs-4 col-md-2">
                       <div>
                         <select className="form-control" defaultValue={order.status_id} ref={node => {
                           this.status_id = node;
@@ -90,124 +53,200 @@ export default class Orders extends Component {
                           this.tracking_link = node;
                         }} />
                       </div>
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.name} placeholder="Name (required)" ref={node => {
-                        this.name = node;
-                      }} />
-                      <input className="form-control" defaultValue={order.link} placeholder="Link" ref={node => {
-                        this.link = node;
-                      }} />
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.number} placeholder="Number" ref={node => {
-                        this.number = node;
-                      }} />
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.category} placeholder="Category" ref={node => {
-                        this.category = node;
-                      }} />
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.material} placeholder="Material" ref={node => {
-                        this.material = node;
-                      }} />
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.supplier} placeholder="Supplier" ref={node => {
-                        this.supplier = node;
-                      }} />
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.price} placeholder="Price per item" ref={node => {
-                        this.price = node;
-                      }} />
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.quantity} placeholder="Quantity" ref={node => {
-                        this.quantity = node;
-                      }} />
-                    </td>
-                    <td>
-                      {
-                        order.price && order.quantity &&
-                        `$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
-                      }
-                    </td>
-                    <td>
-                      <input className="form-control" defaultValue={order.notes} placeholder="Notes" ref={node => {
-                        this.notes = node;
-                      }} />
-                    </td>
-                    <td>{order.updated && (new Date(order.updated)).toString()}</td>
-                    <td>
-                      <button className="btn btn-success" disabled={isSubmittingEdit} onClick={() => {
-                        const editOrder = {
-                          id: order.id,
-                          status_id: Number(this.status_id.value),
-                          tracking_link: this.tracking_link.value,
-                          name: this.name.value,
-                          number: this.number.value,
-                          link: this.link.value,
-                          category: this.category.value,
-                          material: this.material.value,
-                          supplier: this.supplier.value,
-                          price: (Number(this.price.value.replace(/[^0-9\.]/g, ""))).toFixed(2),
-                          quantity: Number(this.quantity.value),
-                          notes: this.notes.value
-                        };
-                        console.log(`Edit order ${order.id} to: ${JSON.stringify(editOrder)}`);
-                        submitEdit(editOrder);
-                      }}>
-                        Save
-                      </button>
-                      &nbsp;
-                      <button className="btn btn-danger" disabled={isSubmittingEdit} onClick={() => {
-                        stopEditing();
-                      }}>
-                        Cancel
-                      </button>
-                    </td>
-                  </tr>
-                : <tr key={order.id}>
-                    <td>
-                      {order.tracking_link
-                        ? <a target="_blank" href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
-                        : statusIdToName(order.status_id)
-                      }
-                    </td>
-                    <td>
-                      {order.link
-                        ? <a target="_blank" href={order.link}>{order.name}</a>
-                        : order.name
-                      }
-                    </td>
-                    <td>{order.number}</td>
-                    <td>{order.category}</td>
-                    <td>{order.material}</td>
-                    <td>{order.supplier}</td>
-                    <td>{order.price && order.price.toString()}</td>
-                    <td>{order.quantity && order.quantity.toString()}</td>
-                    <td>
-                      {
-                        order.price && order.quantity && 
-                        `$${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
-                      }
-                    </td>
-                    <td>{order.notes}</td>
-                    <td>{order.updated && (new Date(order.updated)).toString()}</td>
-                    <td>
-                      <button className="btn" disabled={isSubmittingEdit} onClick={() => {
-                        startEditing(order.id);
-                      }}>
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-            )}
-          </tbody>
-        </table>
+                    </div>
+                    <div className="col-xs-8 col-md-5">
+                      <div>
+                        <input className="form-control" defaultValue={order.name} placeholder="Name (required)" ref={node => {
+                          this.name = node;
+                        }} />
+                        <input className="form-control" defaultValue={order.link} placeholder="Link" ref={node => {
+                          this.link = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-6 col-md-2">
+                      <div>
+                        <input className="form-control" defaultValue={order.number} placeholder="Number" ref={node => {
+                          this.number = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-6 col-md-3">
+                      <div>
+                        <input className="form-control" defaultValue={order.category} placeholder="Category" ref={node => {
+                          this.category = node;
+                        }} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-xs-6 col-md-4">
+                      <div>
+                        <input className="form-control" defaultValue={order.material} placeholder="Material" ref={node => {
+                          this.material = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-6 col-md-4">
+                      <div>
+                        <input className="form-control" defaultValue={order.supplier} placeholder="Supplier" ref={node => {
+                          this.supplier = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-4 col-md-1">
+                      <div>
+                        <input className="form-control" defaultValue={order.price} placeholder="Price per item" ref={node => {
+                          this.price = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-3 col-md-1">
+                      <div>
+                        <input className="form-control" defaultValue={order.quantity} placeholder="Quantity" ref={node => {
+                          this.quantity = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-5 col-md-2 col-lg-2">
+                      <div>
+                        {
+                          order.price && order.quantity && 
+                          `= $${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-xs-12 col-md-4 col-lg-5">
+                      <div>
+                        <input className="form-control" defaultValue={order.notes} placeholder="Notes" ref={node => {
+                          this.notes = node;
+                        }} />
+                      </div>
+                    </div>
+                    <div className="col-xs-12 col-md-5 col-lg-5">
+                      <div>
+                        Status Updated: {order.updated && (new Date(order.updated)).toString()}
+                      </div>
+                    </div>
+                    <div className="col-xs-12 col-md-3 col-lg-2 text-right">
+                      <div>
+                        <button className="btn btn-success" disabled={isSubmittingEdit} onClick={() => {
+                          const editOrder = {
+                            id: order.id,
+                            status_id: Number(this.status_id.value),
+                            tracking_link: this.tracking_link.value,
+                            name: this.name.value,
+                            number: this.number.value,
+                            link: this.link.value,
+                            category: this.category.value,
+                            material: this.material.value,
+                            supplier: this.supplier.value,
+                            price: (Number(this.price.value.replace(/[^0-9\.]/g, ""))).toFixed(2),
+                            quantity: Number(this.quantity.value),
+                            notes: this.notes.value
+                          };
+                          console.log(`Edit order ${order.id} to: ${JSON.stringify(editOrder)}`);
+                          submitEdit(editOrder);
+                        }}>
+                          Save
+                        </button>
+                        &nbsp;
+                        <button className="btn btn-danger" disabled={isSubmittingEdit} onClick={() => {
+                          stopEditing();
+                        }}>
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            : <div className="row" key={order.id}>
+                <div className="col-xs-12 order-container">
+                  <div className="row">
+                    <div className="col-xs-4 col-md-2">
+                      <div>
+                        {order.tracking_link
+                          ? <a target="_blank" href={order.tracking_link}>{statusIdToName(order.status_id)}</a>
+                          : statusIdToName(order.status_id)
+                        }
+                      </div>
+                    </div>
+                    <div className="col-xs-8 col-md-5">
+                      <div>
+                        {order.link
+                          ? <a target="_blank" href={order.link}>{order.name}</a>
+                          : order.name
+                        }
+                      </div>
+                    </div>
+                    <div className="col-xs-6 col-md-2">
+                      <div>
+                        #: {order.number}
+                      </div>
+                    </div>
+                    <div className="col-xs-6 col-md-3">
+                      <div>
+                        Category: {order.category}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-xs-6 col-md-4">
+                      <div>
+                        Material: {order.material}
+                      </div>
+                    </div>
+                    <div className="col-xs-6 col-md-4">
+                      <div>
+                        Supplier: {order.supplier}
+                      </div>
+                    </div>
+                    <div className="col-xs-4 col-md-1">
+                      <div>
+                        {order.price && order.price.toString()}
+                      </div>
+                    </div>
+                    <div className="col-xs-3 col-md-1">
+                      <div>
+                        {order.quantity && 'x ' + order.quantity.toString()}
+                      </div>
+                    </div>
+                    <div className="col-xs-5 col-md-2 col-lg-2">
+                      <div>
+                        {
+                          order.price && order.quantity && 
+                          `= $${(Number(order.price.replace(/[^0-9\.]/g, "")) * order.quantity).toFixed(2).toLocaleString()}`
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-xs-12 col-md-5 col-lg-5">
+                      <div>
+                        Notes: {order.notes}
+                      </div>
+                    </div>
+                    <div className="col-xs-12 col-md-5 col-lg-5">
+                      <div>
+                        Status Updated: {order.updated && (new Date(order.updated)).toString()}
+                      </div>
+                    </div>
+                    <div className="col-xs-12 col-md-2 col-lg-2 text-right">
+                      <div>
+                        <button className="btn" disabled={isSubmittingEdit} onClick={() => {
+                          startEditing(order.id);
+                        }}>
+                          Edit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        )}
       </div>
     );
     
