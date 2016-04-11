@@ -94,7 +94,7 @@ export default class Orders extends Component {
                         }} />
                       </div>
                     </div>
-                    <div className="col-xs-4 col-md-1">
+                    <div className="col-xs-4 col-md-2">
                       <div>
                         <input className="form-control" defaultValue={order.price} placeholder="Price per item" ref={node => {
                           this.price = node;
@@ -108,7 +108,7 @@ export default class Orders extends Component {
                         }} />
                       </div>
                     </div>
-                    <div className="col-xs-5 col-md-2 col-lg-2">
+                    <div className="col-xs-5 col-md-1 col-lg-1">
                       <div>
                         {
                           order.price && order.quantity && 
@@ -127,7 +127,7 @@ export default class Orders extends Component {
                     </div>
                     <div className="col-xs-12 col-md-5 col-lg-5">
                       <div>
-                        Status Updated: {order.updated && (new Date(order.updated)).toString()}
+                        <i>Status Updated:</i> {order.updated && (new Date(order.updated)).toString()}
                       </div>
                     </div>
                     <div className="col-xs-12 col-md-3 col-lg-2 text-right">
@@ -184,24 +184,24 @@ export default class Orders extends Component {
                     </div>
                     <div className="col-xs-6 col-md-2">
                       <div>
-                        #: {order.number}
+                        <i>#:</i> {order.number}
                       </div>
                     </div>
                     <div className="col-xs-6 col-md-3">
                       <div>
-                        Category: {order.category}
+                        <i>Category:</i> {order.category}
                       </div>
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-xs-6 col-md-4">
                       <div>
-                        Material: {order.material}
+                        <i>Material:</i> {order.material}
                       </div>
                     </div>
                     <div className="col-xs-6 col-md-4">
                       <div>
-                        Supplier: {order.supplier}
+                        <i>Supplier:</i> {order.supplier}
                       </div>
                     </div>
                     <div className="col-xs-4 col-md-1">
@@ -226,12 +226,12 @@ export default class Orders extends Component {
                   <div className="row">
                     <div className="col-xs-12 col-md-5 col-lg-5">
                       <div>
-                        Notes: {order.notes}
+                        <i>Notes:</i> {order.notes}
                       </div>
                     </div>
                     <div className="col-xs-12 col-md-5 col-lg-5">
                       <div>
-                        Status Updated: {order.updated && (new Date(order.updated)).toString()}
+                        <i>Status Updated:</i> {order.updated && (new Date(order.updated)).toString()}
                       </div>
                     </div>
                     <div className="col-xs-12 col-md-2 col-lg-2 text-right">
