@@ -69,7 +69,6 @@ export default class AddOrder extends Component {
     
     return (
       <div>
-        Add an order:
         <form onSubmit={e => {
           e.preventDefault();
           if (!this.name.value.trim()) {
@@ -91,6 +90,7 @@ export default class AddOrder extends Component {
           console.log(`order from AddOrder: ${JSON.stringify(order)}`);
           createOrderIfPossible(order);
         }}>
+          <h2>Add an order:</h2>
           <select defaultValue="1" ref={node => {
             this.status_id = node;
           }}>
@@ -113,11 +113,11 @@ export default class AddOrder extends Component {
           <input placeholder="Name (required)" ref={node => {
             this.name = node;
           }} />
-          <input placeholder="Number" ref={node => {
-            this.number = node;
-          }} />
           <input placeholder="Link" ref={node => {
             this.link = node;
+          }} />
+          <input placeholder="Number" ref={node => {
+            this.number = node;
           }} />
           <input placeholder="Category" ref={node => {
             this.category = node;
@@ -142,7 +142,6 @@ export default class AddOrder extends Component {
           </button>
           <button onClick={this.clearAddOrderForm}>Clear</button>
         </form>
-
       </div>
     );
     

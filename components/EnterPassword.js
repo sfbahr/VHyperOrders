@@ -9,24 +9,26 @@ export default class EnterPassword extends Component {
     return (
       <div>
         {!isCorrect &&
-          <span>
-            Password:
-            <form onSubmit={e => {
+          <div>
+            <h2>Password:</h2>
+            <form className="form-inline" onSubmit={e => {
               e.preventDefault();
               if (!psw.value.trim()) {
                 return;
               }
               onEntered(psw.value);
             }} disabled={isCorrect || isChecking}>
-              <input type="password" autoComplete="on" ref={node => {
-                psw = node;
-              }} />
-              <button type="submit" disabled={isCorrect || isChecking}>
+              <div className="form-group">
+                <input type="password" className="form-control" autoComplete="on" ref={node => {
+                  psw = node;
+                }} />
+              </div>
+              <button type="submit" className="btn btn-primary" disabled={isCorrect || isChecking}>
                 Submit
               </button>
               {isChecking && "Checking..."}
             </form>
-          </span>
+          </div>
         }
         {showSuccess && 
           "Password accepted."
