@@ -73,8 +73,7 @@ class App extends Component {
             {showSubmitFailure && "Submission failed"}
             <br />
             <br />
-            Orders:
-            <br />
+            <h2>Orders:</h2>
             <Orders orders={orders}
                     statusIncludes={[0, 1, 2, 3]}
                     isEditing={isEditing}
@@ -84,8 +83,7 @@ class App extends Component {
                     stopEditing={stopEditing}
                     submitEdit={submitEdit} />
             <br />
-            Arrived Orders:
-            <br />
+            <h2>Arrived Orders:</h2>
             <Orders orders={orders}
                     statusIncludes={[4]}
                     isEditing={isEditing}
