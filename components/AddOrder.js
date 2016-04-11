@@ -91,56 +91,87 @@ export default class AddOrder extends Component {
           createOrderIfPossible(order);
         }}>
           <h2>Add an order:</h2>
-          <select defaultValue="1" ref={node => {
-            this.status_id = node;
-          }}>
-            <option value="1">
-              {statusIdToName(1)}
-            </option>
-            <option value="2">
-              {statusIdToName(2)}
-            </option>
-            <option value="3">
-              {statusIdToName(3)}
-            </option>
-            <option value="4">
-              {statusIdToName(4)}
-            </option>
-          </select>
-          <input placeholder="Tracking Link" ref={node => {
-            this.tracking_link = node;
-          }} />
-          <input placeholder="Name (required)" ref={node => {
-            this.name = node;
-          }} />
-          <input placeholder="Link" ref={node => {
-            this.link = node;
-          }} />
-          <input placeholder="Number" ref={node => {
-            this.number = node;
-          }} />
-          <input placeholder="Category" ref={node => {
-            this.category = node;
-          }} />
-          <input placeholder="Material" ref={node => {
-            this.material = node;
-          }} />
-          <input placeholder="Supplier" ref={node => {
-            this.supplier = node;
-          }} />
-          <input placeholder="Price per item" ref={node => {
-            this.price = node;
-          }} />
-          <input placeholder="Quantity" ref={node => {
-            this.quantity = node;
-          }} />
-          <input placeholder="Notes" ref={node => {
-            this.notes = node;
-          }} />
-          <button type="submit" disabled={isSubmitting}>
+          <div className="row form-group">
+            <div className="col-xs-4">
+              <select className="form-control" defaultValue="1" ref={node => {
+                this.status_id = node;
+              }}>
+                <option value="1">
+                  {statusIdToName(1)}
+                </option>
+                <option value="2">
+                  {statusIdToName(2)}
+                </option>
+                <option value="3">
+                  {statusIdToName(3)}
+                </option>
+                <option value="4">
+                  {statusIdToName(4)}
+                </option>
+              </select>
+            </div>
+            <div className="col-xs-8">
+              <input className="form-control" placeholder="Tracking Link" ref={node => {
+                this.tracking_link = node;
+              }} />
+            </div>
+          </div>
+          <div className="row form-group">
+            <div className="col-xs-4">
+              <input className="form-control" placeholder="Name (required)" ref={node => {
+                this.name = node;
+              }} />
+            </div>
+            <div className="col-xs-8">
+              <input className="form-control" placeholder="Link" ref={node => {
+                this.link = node;
+              }} />
+            </div>
+          </div>
+          <div className="row form-group">
+            <div className="col-xs-6 col-md-3">
+              <input className="form-control" placeholder="Number" ref={node => {
+                this.number = node;
+              }} />
+            </div>
+            <div className="col-xs-6 col-md-3">
+              <input className="form-control" placeholder="Category" ref={node => {
+                this.category = node;
+              }} />
+            </div>
+            <div className="col-xs-6 col-md-3">
+              <input className="form-control" placeholder="Material" ref={node => {
+                this.material = node;
+              }} />
+            </div>
+            <div className="col-xs-6 col-md-3">
+              <input className="form-control" placeholder="Supplier" ref={node => {
+                this.supplier = node;
+              }} />
+            </div>
+          </div>
+          <div className="row form-group">
+            <div className="col-xs-6 col-md-3">
+              <input className="form-control" placeholder="Price per item" ref={node => {
+                this.price = node;
+              }} />
+            </div>
+            <div className="col-xs-6 col-md-3">
+              <input className="form-control" placeholder="Quantity" ref={node => {
+                this.quantity = node;
+              }} />
+            </div>
+            <div className="col-xs-12 col-md-6">
+              <input className="form-control" placeholder="Notes" ref={node => {
+                this.notes = node;
+              }} />
+            </div>
+          </div>
+          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
             Submit
           </button>
-          <button onClick={this.clearAddOrderForm}>Clear</button>
+          &nbsp;
+          <button className="btn" onClick={this.clearAddOrderForm}>Clear</button>
         </form>
       </div>
     );

@@ -24,7 +24,7 @@ export default class Orders extends Component {
     
     return (
       <div>
-        <table>
+        <table className="table-bordered table-striped table-responsive">
           <tbody>
             <tr>
               <th>Status</th>

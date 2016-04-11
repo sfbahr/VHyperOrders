@@ -57,7 +57,7 @@ class App extends Component {
             startEditing, stopEditing, submitEdit, fetchOrdersIfNeeded } = this.props;
     
     return (
-      <div>
+      <div className="container">
         <EnterPassword psw={psw}
                        isCorrect={isCorrect}
                        isChecking={isChecking}
