@@ -20,7 +20,7 @@ export default class EnterPassword extends Component {
             }} disabled={isCorrect || isChecking}>
               <div className="row form-group">
                 <div className="col-sm-6 col-md-5 col-lg-4">
-                  <input className="form-control" type="password" autoComplete="on" ref={node => {
+                  <input className="form-control" type="password" autoFocus autoComplete="on" ref={node => {
                     psw = node;
                   }} />
                 </div>
