@@ -12,6 +12,8 @@ export const statusIdToName = (id) => {
       return "Shipped";
     case 4:
       return "Arrived";
+    case 5:
+      return "Canceled";
     default:
       return "Invalid Status";
   }
@@ -47,6 +49,9 @@ export default class Orders extends Component {
                           </option>
                           <option value="4">
                             {statusIdToName(4)}
+                          </option>
+                          <option value="5">
+                            {statusIdToName(5)}
                           </option>
                         </select>
                         <input className="form-control" defaultValue={order.tracking_link} placeholder="Tracking Link" ref={node => {
