@@ -137,7 +137,7 @@ export default class Orders extends Component {
                     </div>
                     <div className="col-xs-12 col-md-3 col-lg-2 text-right">
                       <div>
-                        <button className="btn btn-success" disabled={isSubmittingEdit} onClick={() => {
+                        <button className="btn btn-primary" disabled={isSubmittingEdit} onClick={() => {
                           const editOrder = {
                             id: order.id,
                             status_id: Number(this.status_id.value),
@@ -158,7 +158,7 @@ export default class Orders extends Component {
                           Save
                         </button>
                         &nbsp;
-                        <button className="btn btn-danger" disabled={isSubmittingEdit} onClick={() => {
+                        <button className="btn btn-default" disabled={isSubmittingEdit} onClick={() => {
                           stopEditing();
                         }}>
                           Cancel
@@ -241,7 +241,7 @@ export default class Orders extends Component {
                     </div>
                     <div className="col-xs-12 col-md-2 col-lg-2 text-right">
                       <div>
-                        <button className="btn" disabled={isSubmittingEdit} onClick={() => {
+                        <button className="btn btn-default" disabled={isSubmittingEdit} onClick={() => {
                           startEditing(order.id);
                         }}>
                           Edit

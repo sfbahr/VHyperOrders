@@ -171,7 +171,7 @@ export default class AddOrder extends Component {
             Submit
           </button>
           &nbsp;
-          <button className="btn" onClick={this.clearAddOrderForm}>Clear</button>
+          <button className="btn btn-default" onClick={this.clearAddOrderForm}>Clear</button>
         </form>
       </div>
     );
