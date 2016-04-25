@@ -92,7 +92,17 @@ class App extends Component {
                     startEditing={startEditing}
                     stopEditing={stopEditing}
                     submitEdit={submitEdit} />
-						<br />
+            <br />
+            <h2>Returned Orders:</h2>
+            <Orders orders={orders}
+                    statusIncludes={[6]}
+                    isEditing={isEditing}
+                    isSubmittingEdit={isSubmittingEdit}
+                    editingId={editingId}
+                    startEditing={startEditing}
+                    stopEditing={stopEditing}
+                    submitEdit={submitEdit} />
+            <br />
             <h2>Canceled Orders:</h2>
             <Orders orders={orders}
                     statusIncludes={[5]}

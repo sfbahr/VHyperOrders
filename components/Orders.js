@@ -14,6 +14,8 @@ export const statusIdToName = (id) => {
       return "Arrived";
     case 5:
       return "Canceled";
+    case 6:
+      return "Returned";
     default:
       return "Invalid Status";
   }
@@ -49,6 +51,9 @@ export default class Orders extends Component {
                           </option>
                           <option value="4">
                             {statusIdToName(4)}
+                          </option>
+                          <option value="6">
+                            {statusIdToName(6)}
                           </option>
                           <option value="5">
                             {statusIdToName(5)}
