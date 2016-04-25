@@ -89,6 +89,7 @@ export default class AddOrder extends Component {
           };
           console.log(`order from AddOrder: ${JSON.stringify(order)}`);
           createOrderIfPossible(order);
+          this.clearAddOrderForm();
         }}>
           <h2>Add an order:</h2>
           <div className="row form-group">
